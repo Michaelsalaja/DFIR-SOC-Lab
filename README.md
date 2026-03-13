@@ -14,15 +14,11 @@ To maintain the integrity of the evidence, an MD5 hash of the original image fil
 
 A command-line tool like ***md5sum (Linux/macOS) echo "$(date) $(md5sum 8-jpeg-search.dd)" > hash_verification.txt*** is used. The generated hash value is then saved to a separate text file with the command-line ***cat hash_verification.txt***, which serves as a record of the original state of the evidence.
 
-![Screenshot of a Kali Linux terminal showing the execution of commands to change directories, list files, generate an MD5 hash of '8-jpeg-search.dd', save it to 'hash_verification.txt', and display the contents of that file. The output shows the date and the hash value '9bdb9c76b80e90d155806a1fc7846db5'.](image)
-
-# MD5 Hash Creation
+![Image alt](https://github.com/Michaelsalaja/DFIR-SOC-Lab/blob/dcace82a62477bc5ba8a2ab2bd55feae856f8c7b/Screenshot%202026-03-13%20at%2023.37.51.png)
 
 **Step 2:** Prior to setting up the autopsy case, the command ***sudo autopsy*** was used to be directed to <u>http://localhost:9999/autopsy</u>
 
-![Established Link to Localhost for Forensic Image creation and Importation](image)
-
-*Established Link to Localhost for Forensic Image creation and Importation*
+![Image alt](https://github.com/Michaelsalaja/DFIR-SOC-Lab/blob/dcace82a62477bc5ba8a2ab2bd55feae856f8c7b/Screenshot%202026-03-13%20at%2023.38.54.png)
 
 ## Autopsy Case Setup & Hash Verification
 
@@ -30,23 +26,17 @@ Autopsy is a powerful open-source digital forensics platform or a forensic brows
 
 **Step 3:** A new autopsy case was created, and the image file is added as a data source. During the data source addition process, Autopsy automatically calculates the MD5 hash of the added file. The calculated hash is, then, stored within the case database.
 
-![Screenshot of the Autopsy web interface showing the "Creating Case: Techshield_investigation" screen. The text indicates the case directory and configuration file have been created and prompts the user to select a name from a list to create a host. The selected name is "Michael".](image)
-
-*Autopsy Case Creation*
+![Image alt](https://github.com/Michaelsalaja/DFIR-SOC-Lab/blob/dcace82a62477bc5ba8a2ab2bd55feae856f8c7b/Screenshot%202026-03-13%20at%2023.42.25.png)
 
 ## Task 3: Verifying the hash
 
 The figure below shows the MD5sum of the image and the hash calculated by Autopsy is then compared against the original hash value stored in the in the image file by manually comparing this hash against a known good fingerprint with the one in the image file. A perfect match confirms the integrity of the evidence. That’s not a single file in the image, but that’s the MD5sum for the entire image itself
 
-![Screenshot of a web browser showing the Autopsy forensic tool calculating an MD5 hash for a disk image. A red box highlights the MD5 hash value: 98D89C76880E90D155806A1FC7846DB5.](image)
-
-*Correct MD5 Hash Calculation*
+![Image alt](https://github.com/Michaelsalaja/DFIR-SOC-Lab/blob/dcace82a62477bc5ba8a2ab2bd55feae856f8c7b/Screenshot%202026-03-13%20at%2023.44.22.png)
 
 From there, I am led to my main case management screen. My TechShield autopsy case.
 
-![Screenshot of the Autopsy case management screen showing the "Techshield_Autopsy" case. It lists a mounted volume "C:/" with the name "8-jpeg-search.dd-0-0" and file system type "ntfs". Buttons for "ANALYZE", "ADD IMAGE FILE", and "CLOSE HOST" are visible.](image)
-
-*Case File Management screen before analysis*
+![Image alt](https://github.com/Michaelsalaja/DFIR-SOC-Lab/blob/dcace82a62477bc5ba8a2ab2bd55feae856f8c7b/Screenshot%202026-03-13%20at%2023.48.05.png)
 
 # Task 4: File Analysis & Hidden Image Recovery
 
@@ -58,16 +48,16 @@ The last part of this section comprises of forensic discovery and Hidden image r
 
 *   The search box was used to search for files because autopsy can identify files based on their digital signatures and it enables us to identify the timestamp of files written, access, changed, and created including their sizes. That can be broken down in three parts: The written time, which is sometimes called the M-Time, the access time, which is sometimes called the A-Time, and creation time, which is called the C-Time.
 
-![Search Results](image)
+![Image alt](https://github.com/Michaelsalaja/DFIR-SOC-Lab/blob/dcace82a62477bc5ba8a2ab2bd55feae856f8c7b/Screenshot%202026-03-13%20at%2023.50.03.png)
 
 *   Navigating to 14 File types > By MIME Type > image/jpeg revealed all files including those that had their extensions changed to conceal them.
 *   Before deciding to extract the contents from each file, I used the "Generate MD5 list of files" to button to have the calculated MD5sum values for each file in the current directory
 
-![Screenshot of a web browser showing Autopsy forensic tool interface with MD5 values for files in C:/. The list includes files like $AttrDef, $BadClus, $Bitmap, $Boot, $LogFile, $MFT, $Secure, $UpCase, and $Volume with their corresponding MD5 hashes.](image)
-
-*Calculated MD5sum Values*
+![Image alt](https://github.com/Michaelsalaja/DFIR-SOC-Lab/blob/dcace82a62477bc5ba8a2ab2bd55feae856f8c7b/Screenshot%202026-03-13%20at%2023.50.42.png)
 
 *   Recovery: Using autopsy, the contents within each file are then extracted and the 6 discovered JPEG images are exported from the autopsy to a designated folder for further review.
+
+![Image alt](https://github.com/Michaelsalaja/DFIR-SOC-Lab/blob/dcace82a62477bc5ba8a2ab2bd55feae856f8c7b/Screenshot%202026-03-13%20at%2023.53.41.png)
 
 ![Thumbnail for C:/alloc/file1.jpg showing an orange flower shape with the text "I AM PICTURE #1"](image)
 ![Thumbnail for C:/alloc/file2.dat showing a red square with the text "I AM PICTURE #2"](image)

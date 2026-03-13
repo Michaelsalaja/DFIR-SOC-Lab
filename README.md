@@ -1,2 +1,86 @@
-# DFIR-SOC-Lab
-This projects showcases Digital Forensic Evidence Collection and Analysis in my home lab.
+# Forensic Evidence Collection and Analysis
+
+## Scope
+
+This report details a forensic analysis of an image file, including hash generation, case setup in Autopsy, hash verification, and the discovery and recovery of hidden image files. A pre-created forensic challenge image file, obtained from Techshied’s environment after an incident, was used to create a new autopsy case. And the goal is to ensure all investigative actions are performed on a preserved copy of the data.
+
+## Verification of Forensic Image Test File
+
+### Step 1: MD5 Hash Creation and Storage
+
+To maintain the integrity of the evidence, an MD5 hash of the original image file created, which creates a unique digital fingerprint that will be used to verify that the file is unmodified or hasn't been altered during the forensic process. It is just simply a fingerprint of the given input.
+
+### Process:
+
+A command-line tool like ***md5sum (Linux/macOS) echo "$(date) $(md5sum 8-jpeg-search.dd)" > hash_verification.txt*** is used. The generated hash value is then saved to a separate text file with the command-line ***cat hash_verification.txt***, which serves as a record of the original state of the evidence.
+
+![Screenshot of a Kali Linux terminal showing the execution of commands to change directories, list files, generate an MD5 hash of '8-jpeg-search.dd', save it to 'hash_verification.txt', and display the contents of that file. The output shows the date and the hash value '9bdb9c76b80e90d155806a1fc7846db5'.](image)
+
+# MD5 Hash Creation
+
+**Step 2:** Prior to setting up the autopsy case, the command ***sudo autopsy*** was used to be directed to <u>http://localhost:9999/autopsy</u>
+
+![Established Link to Localhost for Forensic Image creation and Importation](image)
+
+*Established Link to Localhost for Forensic Image creation and Importation*
+
+## Autopsy Case Setup & Hash Verification
+
+Autopsy is a powerful open-source digital forensics platform or a forensic browser used to analyze disk images and it enabled Michael Cyber Defense us to look at the content of the drive image, so within the case setup, the hash of the evidence file is verified to ensure that the file being analyzed is the same as the original, unaltered evidence.
+
+**Step 3:** A new autopsy case was created, and the image file is added as a data source. During the data source addition process, Autopsy automatically calculates the MD5 hash of the added file. The calculated hash is, then, stored within the case database.
+
+![Screenshot of the Autopsy web interface showing the "Creating Case: Techshield_investigation" screen. The text indicates the case directory and configuration file have been created and prompts the user to select a name from a list to create a host. The selected name is "Michael".](image)
+
+*Autopsy Case Creation*
+
+## Task 3: Verifying the hash
+
+The figure below shows the MD5sum of the image and the hash calculated by Autopsy is then compared against the original hash value stored in the in the image file by manually comparing this hash against a known good fingerprint with the one in the image file. A perfect match confirms the integrity of the evidence. That’s not a single file in the image, but that’s the MD5sum for the entire image itself
+
+![Screenshot of a web browser showing the Autopsy forensic tool calculating an MD5 hash for a disk image. A red box highlights the MD5 hash value: 98D89C76880E90D155806A1FC7846DB5.](image)
+
+*Correct MD5 Hash Calculation*
+
+From there, I am led to my main case management screen. My TechShield autopsy case.
+
+![Screenshot of the Autopsy case management screen showing the "Techshield_Autopsy" case. It lists a mounted volume "C:/" with the name "8-jpeg-search.dd-0-0" and file system type "ntfs". Buttons for "ANALYZE", "ADD IMAGE FILE", and "CLOSE HOST" are visible.](image)
+
+*Case File Management screen before analysis*
+
+# Task 4: File Analysis & Hidden Image Recovery
+
+The last part of this section comprises of forensic discovery and Hidden image recovery. This is where File Analysis is conducted to discover and recover artifacts not immediately visible, such as hidden or deleted files. In this case, the objective is to find 5 hidden JPG images. The File Analysis gives me a list of files that are inside this image
+
+## Process:
+
+### File Type identification
+
+*   The search box was used to search for files because autopsy can identify files based on their digital signatures and it enables us to identify the timestamp of files written, access, changed, and created including their sizes. That can be broken down in three parts: The written time, which is sometimes called the M-Time, the access time, which is sometimes called the A-Time, and creation time, which is called the C-Time.
+
+![Search Results](image)
+
+*   Navigating to 14 File types > By MIME Type > image/jpeg revealed all files including those that had their extensions changed to conceal them.
+*   Before deciding to extract the contents from each file, I used the "Generate MD5 list of files" to button to have the calculated MD5sum values for each file in the current directory
+
+![Screenshot of a web browser showing Autopsy forensic tool interface with MD5 values for files in C:/. The list includes files like $AttrDef, $BadClus, $Bitmap, $Boot, $LogFile, $MFT, $Secure, $UpCase, and $Volume with their corresponding MD5 hashes.](image)
+
+*Calculated MD5sum Values*
+
+*   Recovery: Using autopsy, the contents within each file are then extracted and the 6 discovered JPEG images are exported from the autopsy to a designated folder for further review.
+
+![Thumbnail for C:/alloc/file1.jpg showing an orange flower shape with the text "I AM PICTURE #1"](image)
+![Thumbnail for C:/alloc/file2.dat showing a red square with the text "I AM PICTURE #2"](image)
+![Thumbnail for C:/del1/file6.jpg showing a dark purple square with the text "I AM PICTURE #3"](image)
+![Thumbnail for C:/del2/file7.hmm showing a grey square with the text "I AM PICTURE #4"](image)
+![Thumbnail showing a teal gradient square with the text "I AM Picture #5"](image)
+![Thumbnail for C:/misc/file13.dll:here showing a green puzzle piece shape with the text "I AM PICTURE #10"](image)
+
+## Task 5: Significance of Findings
+
+The discovery and recovery of hidden images are significant from a forensic perspective for several reasons:
+
+*   **Intent to Conceal:** The act of hiding files, either by changing their extension or deleting them to leave them in unallocated space, strongly suggests a deliberate attempt to conceal information. This can indicate mens rea (guilty mind) on the part of the suspect.
+*   **Key Evidence:** The recovered images themselves can contain crucial evidence. They may be contraband, documents relevant to the case, or show a timeline of events. For example, the metadata (EXIF data) within the images could reveal the date, time, and even the geolocation where the picture was taken, providing a timeline and location for a specific event.
+*   **Attacker Behavior:** The methods used to hide the files (e.g., specific file names or directory structures) can reveal the suspect's level of technical sophistication and common operating procedures, which can be valuable for future investigations.
+*   **Link to Other Artifacts:** The recovered files can be linked to other artifacts in the case, such as web browser history showing where they were downloaded from or chat logs discussing their existence, helping to build a more complete picture of the events.

@@ -2,7 +2,7 @@
 
 ## Scope
 
-This report details a forensic analysis of an image file, including hash generation, case setup in Autopsy, hash verification, and the discovery and recovery of hidden image files. A pre-created forensic challenge image file, obtained from Techshied’s environment after an incident, was used to create a new autopsy case. And the goal is to ensure all investigative actions are performed on a preserved copy of the data.
+This report details a forensic analysis of an image file, including hash generation, case setup in Autopsy, hash verification, and the discovery and recovery of hidden image files. A pre-created forensic challenge image file that was obtained from Techshied’s environment after an incident was used to create a new autopsy case. The goal is to ensure all investigative actions are performed on a preserved copy of the data.
 
 ## Verification of Forensic Image Test File
 
